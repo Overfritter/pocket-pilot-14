@@ -1,25 +1,68 @@
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Target } from "lucide-react";
+import { Target } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { BucketDialog } from "@/components/BucketDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Bucket {
   id: string;
   name: string;
-  current: number;
-  target: number;
-  icon: string;
-  color: string;
+  current_amount: number;
+  target_amount: number | null;
+  category: string;
 }
 
+const CATEGORY_ICONS: Record<string, string> = {
+  "Travel": "✈️",
+  "Emergency Fund": "🛡️",
+  "Electronics": "💻",
+  "Home & Living": "🏠",
+  "Education": "📚",
+  "Health & Fitness": "💪",
+  "Entertainment": "🎮",
+  "Savings": "💰",
+  "Other": "📦",
+};
+
+const CATEGORY_COLORS: Record<string, string> = {
+  "Travel": "hsl(var(--primary))",
+  "Emergency Fund": "hsl(var(--success))",
+  "Electronics": "hsl(var(--accent))",
+  "Home & Living": "hsl(var(--secondary))",
+  "Education": "hsl(var(--primary))",
+  "Health & Fitness": "hsl(var(--success))",
+  "Entertainment": "hsl(var(--accent))",
+  "Savings": "hsl(var(--secondary))",
+  "Other": "hsl(var(--muted-foreground))",
+};
+
 export default function Buckets() {
-  const buckets: Bucket[] = [
-    { id: '1', name: 'Travel', current: 1250, target: 5000, icon: '✈️', color: 'hsl(var(--primary))' },
-    { id: '2', name: 'Emergency Fund', current: 4500, target: 10000, icon: '🛡️', color: 'hsl(var(--success))' },
-    { id: '3', name: 'New Laptop', current: 800, target: 2000, icon: '💻', color: 'hsl(var(--accent))' },
-    { id: '4', name: 'Expenses', current: 3200, target: 3500, icon: '🏠', color: 'hsl(var(--secondary))' },
-  ];
+  const [buckets, setBuckets] = useState<Bucket[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchBuckets = async () => {
+    try {
+      const { data, error } = await (supabase as any)
+        .from("buckets")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setBuckets(data || []);
+    } catch (error) {
+      console.error("Error fetching buckets:", error);
+      toast.error("Failed to load buckets");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBuckets();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -31,18 +74,42 @@ export default function Buckets() {
             Give your goals a home.
           </p>
         </div>
-        <Button size="lg" className="gap-2">
-          <Plus className="h-4 w-4" />
-          Create Bucket
-        </Button>
+        <BucketDialog onSuccess={fetchBuckets} />
       </div>
 
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Loading your buckets...</p>
+        </div>
+      ) : buckets.length === 0 ? (
+        <Card className="p-8 text-center bg-gradient-card shadow-md">
+          <div className="mx-auto max-w-md space-y-4">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+              <Target className="h-8 w-8 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold">Create Your First Bucket</h3>
+              <p className="mt-2 text-muted-foreground">
+                Set aside money for what matters most—vacations, gadgets, rainy days. 
+                FinTant automatically funds them based on your rules.
+              </p>
+            </div>
+            <BucketDialog onSuccess={fetchBuckets} />
+          </div>
+        </Card>
+      ) : null}
+
       {/* Buckets Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {buckets.map((bucket) => {
-          const progress = (bucket.current / bucket.target) * 100;
-          const remaining = bucket.target - bucket.current;
-          const isComplete = progress >= 100;
+      {buckets.length > 0 && (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {buckets.map((bucket) => {
+            const target = bucket.target_amount || 0;
+            const current = bucket.current_amount || 0;
+            const progress = target > 0 ? (current / target) * 100 : 0;
+            const remaining = target - current;
+            const isComplete = progress >= 100;
+            const icon = CATEGORY_ICONS[bucket.category] || "📦";
+            const color = CATEGORY_COLORS[bucket.category] || "hsl(var(--muted-foreground))";
           
           return (
             <Card
@@ -65,7 +132,7 @@ export default function Buckets() {
                     cy="50"
                     r="40"
                     fill="none"
-                    stroke={bucket.color}
+                    stroke={color}
                     strokeWidth="8"
                     strokeDasharray={`${progress * 2.51} 251`}
                     strokeLinecap="round"
@@ -79,13 +146,11 @@ export default function Buckets() {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-2xl">
-                      {bucket.icon}
+                      {icon}
                     </div>
                     <div>
                       <h3 className="font-semibold text-lg">{bucket.name}</h3>
-                      {bucket.name === 'Expenses' && (
-                        <Badge variant="secondary" className="mt-1">Default</Badge>
-                      )}
+                      <Badge variant="secondary" className="mt-1">{bucket.category}</Badge>
                     </div>
                   </div>
                   {isComplete && (
@@ -97,23 +162,29 @@ export default function Buckets() {
                 <div className="space-y-2">
                   <div className="flex items-baseline justify-between">
                     <span className="text-2xl font-bold">
-                      ${bucket.current.toLocaleString()}
+                      ${current.toLocaleString()}
                     </span>
-                    <span className="text-sm text-muted-foreground">
-                      of ${bucket.target.toLocaleString()}
-                    </span>
-                  </div>
-                  <Progress value={Math.min(progress, 100)} className="h-2" />
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium" style={{ color: bucket.color }}>
-                      {progress.toFixed(0)}% funded
-                    </span>
-                    {!isComplete && (
-                      <span className="text-muted-foreground">
-                        ${remaining.toLocaleString()} to go
+                    {target > 0 && (
+                      <span className="text-sm text-muted-foreground">
+                        of ${target.toLocaleString()}
                       </span>
                     )}
                   </div>
+                  {target > 0 && (
+                    <>
+                      <Progress value={Math.min(progress, 100)} className="h-2" />
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="font-medium" style={{ color }}>
+                          {progress.toFixed(0)}% funded
+                        </span>
+                        {!isComplete && (
+                          <span className="text-muted-foreground">
+                            ${remaining.toLocaleString()} to go
+                          </span>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* ETA */}
@@ -128,27 +199,8 @@ export default function Buckets() {
             </Card>
           );
         })}
-      </div>
-
-      {/* Empty State Hint */}
-      <Card className="p-8 text-center bg-gradient-card shadow-md">
-        <div className="mx-auto max-w-md space-y-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <Plus className="h-8 w-8 text-primary" />
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold">Create Your First Custom Bucket</h3>
-            <p className="mt-2 text-muted-foreground">
-              Set aside money for what matters most—vacations, gadgets, rainy days. 
-              FinTant automatically funds them based on your rules.
-            </p>
-          </div>
-          <Button size="lg" className="gap-2">
-            <Plus className="h-4 w-4" />
-            Get Started
-          </Button>
         </div>
-      </Card>
+      )}
     </div>
   );
 }
