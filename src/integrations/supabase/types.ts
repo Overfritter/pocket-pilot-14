@@ -14,66 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      buckets: {
-        Row: {
-          category: string
-          created_at: string
-          current_amount: number | null
-          id: string
-          name: string
-          target_amount: number | null
-          time_limit: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          current_amount?: number | null
-          id?: string
-          name: string
-          target_amount?: number | null
-          time_limit?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          current_amount?: number | null
-          id?: string
-          name?: string
-          target_amount?: number | null
-          time_limit?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          created_at: string
-          email: string | null
-          id: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
