@@ -53,8 +53,10 @@ export default function Buckets() {
       if (error) throw error;
       setBuckets(data || []);
     } catch (error) {
-      console.error("Error fetching buckets:", error);
-      toast.error("Failed to load buckets");
+      if (import.meta.env.DEV) {
+        console.error("Error fetching buckets:", error);
+      }
+      toast.error("Unable to load buckets. Please try again.");
     } finally {
       setLoading(false);
     }

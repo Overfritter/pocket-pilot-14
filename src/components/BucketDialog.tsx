@@ -47,7 +47,10 @@ const CATEGORIES = [
 const formSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
   category: z.string().min(1, "Category is required"),
-  target_amount: z.string().optional(),
+  target_amount: z.string().optional().refine(
+    (val) => !val || (!isNaN(parseFloat(val)) && parseFloat(val) > 0 && parseFloat(val) <= 1000000000),
+    { message: "Amount must be a positive number up to 1 billion" }
+  ),
   time_limit: z.string().optional(),
 });
 
@@ -94,8 +97,10 @@ export function BucketDialog({ onSuccess }: BucketDialogProps) {
       setOpen(false);
       onSuccess();
     } catch (error) {
-      console.error("Error creating bucket:", error);
-      toast.error("Failed to create bucket");
+      if (import.meta.env.DEV) {
+        console.error("Error creating bucket:", error);
+      }
+      toast.error("Unable to create bucket. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
