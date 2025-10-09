@@ -69,7 +69,7 @@ export default function Settings() {
       <Card className="p-6 bg-gradient-card shadow-md">
         <h2 className="text-xl font-semibold mb-4">Financial Focus</h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Choose your primary financial goal to personalize your experience
+          Choose your most fitting financial goal to personalize your experience
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button
