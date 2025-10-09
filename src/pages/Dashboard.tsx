@@ -3,8 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, AlertCircle, TrendingUp, TrendingDown, Receipt } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+
+type TimePeriod = '1day' | '7days' | '30days' | '1year';
 
 export default function Dashboard() {
+  const [timePeriod, setTimePeriod] = useState<TimePeriod>('30days');
+
   // Mock data
   const totalBalance = 12450.75;
   const projectedIncome = 5000;
@@ -16,18 +21,36 @@ export default function Dashboard() {
     { id: 2, type: "info", message: "Recurring payment due in 3 days: Netflix $15.99" },
   ];
 
-  // Mock 30-day forecast data points
-  const forecastDays = Array.from({ length: 30 }, (_, i) => {
+  // Generate forecast data based on selected period
+  const getDaysCount = () => {
+    switch (timePeriod) {
+      case '1day': return 24; // hourly data for 1 day
+      case '7days': return 7;
+      case '30days': return 30;
+      case '1year': return 365;
+    }
+  };
+
+  const forecastDays = Array.from({ length: getDaysCount() }, (_, i) => {
     const variation = Math.sin(i / 5) * 1000;
     return {
       day: i + 1,
-      balance: totalBalance + (netCashFlow / 30) * i + variation,
+      balance: totalBalance + (netCashFlow / getDaysCount()) * i + variation,
     };
   });
 
   const maxBalance = Math.max(...forecastDays.map(d => d.balance));
   const minBalance = Math.min(...forecastDays.map(d => d.balance));
   const range = maxBalance - minBalance;
+
+  const getPeriodLabel = () => {
+    switch (timePeriod) {
+      case '1day': return '24-Hour';
+      case '7days': return '7-Day';
+      case '30days': return '30-Day';
+      case '1year': return '1-Year';
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -72,19 +95,51 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* 30-Day Forecast Chart */}
+      {/* Cash Flow Forecast Chart */}
       <Card className="p-6 bg-gradient-card shadow-md">
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h2 className="text-xl font-semibold">30-Day Cash Flow Forecast</h2>
+              <h2 className="text-xl font-semibold">{getPeriodLabel()} Cash Flow Forecast</h2>
               <p className="text-sm text-muted-foreground">
-                Projected balance: ${forecastDays[29].balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                Projected balance: ${forecastDays[forecastDays.length - 1].balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
-            <Badge variant={netCashFlow > 0 ? "default" : "destructive"} className="text-sm">
-              {netCashFlow > 0 ? '+' : ''}{netCashFlow.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1 bg-muted p-1 rounded-lg">
+                <Button
+                  variant={timePeriod === '1day' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setTimePeriod('1day')}
+                >
+                  1D
+                </Button>
+                <Button
+                  variant={timePeriod === '7days' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setTimePeriod('7days')}
+                >
+                  7D
+                </Button>
+                <Button
+                  variant={timePeriod === '30days' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setTimePeriod('30days')}
+                >
+                  30D
+                </Button>
+                <Button
+                  variant={timePeriod === '1year' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setTimePeriod('1year')}
+                >
+                  1Y
+                </Button>
+              </div>
+              <Badge variant={netCashFlow > 0 ? "default" : "destructive"} className="text-sm">
+                {netCashFlow > 0 ? '+' : ''}{netCashFlow.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+              </Badge>
+            </div>
           </div>
 
           {/* Simple line chart */}
