@@ -74,6 +74,39 @@ export type Database = {
         }
         Relationships: []
       }
+      rules: {
+        Row: {
+          action: string
+          created_at: string
+          enabled: boolean
+          id: string
+          name: string
+          trigger: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          name: string
+          trigger: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          name?: string
+          trigger?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
