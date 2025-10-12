@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, AlertCircle, TrendingUp, TrendingDown, Receipt } from "lucide-react";
+import { Plus, AlertCircle, TrendingUp, TrendingDown, Receipt, ArrowDownToLine, ArrowRightLeft, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -11,7 +11,8 @@ export default function Dashboard() {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>('30days');
 
   // Mock data
-  const totalBalance = 12450.75;
+  const totalBalance = 12450.75; // Balance on platform
+  const totalBalanceAllAccounts = 45750.25; // Total including off-platform money
   const projectedIncome = 5000;
   const upcomingExpenses = 2845.50;
   const netCashFlow = projectedIncome - upcomingExpenses;
@@ -55,20 +56,45 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Hero Section */}
-      <div className="space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight">Your money, automatically organized.</h1>
-        <p className="text-lg text-muted-foreground">
-          Welcome back! Here's what's happening with your finances.
-        </p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight">Your money, automatically organized.</h1>
+          <p className="text-lg text-muted-foreground">
+            Welcome back! Here's what's happening with your finances.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="gap-2">
+            <ArrowDownToLine className="h-4 w-4" />
+            Add Money
+          </Button>
+          <Button variant="outline" size="sm" className="gap-2">
+            <ArrowRightLeft className="h-4 w-4" />
+            Move Money
+          </Button>
+          <Button variant="outline" size="sm" className="gap-2">
+            <Building2 className="h-4 w-4" />
+            Bank Details
+          </Button>
+        </div>
       </div>
 
-      {/* Balance Overview */}
+      {/* Total Balance - All Accounts */}
+      <Card className="p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-background border-primary/20 shadow-lg">
+        <div className="space-y-3">
+          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Total Balance</p>
+          <p className="text-5xl font-bold">${totalBalanceAllAccounts.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          <p className="text-sm text-muted-foreground">Including all your accounts (on and off platform)</p>
+        </div>
+      </Card>
+
+      {/* Balance Overview - Platform */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card className="p-6 bg-gradient-card shadow-md hover:shadow-lg transition-shadow">
           <div className="space-y-2">
-            <p className="text-sm font-medium text-muted-foreground">Total Balance</p>
+            <p className="text-sm font-medium text-muted-foreground">Platform Balance</p>
             <p className="text-3xl font-bold">${totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-            <p className="text-xs text-muted-foreground">Across all accounts</p>
+            <p className="text-xs text-muted-foreground">On this platform</p>
           </div>
         </Card>
 
