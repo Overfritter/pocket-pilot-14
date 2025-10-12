@@ -1,6 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
-import { Home, Wallet, TrendingUp, Receipt, Settings, Wrench } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, Wallet, TrendingUp, Receipt, Settings, Wrench, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
@@ -13,6 +16,29 @@ const navigation = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, loading, signOut } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/auth');
+    }
+  }, [user, loading, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,6 +72,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={signOut}
+              className="ml-2 gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="hidden md:inline">Logout</span>
+            </Button>
           </nav>
         </div>
       </header>
