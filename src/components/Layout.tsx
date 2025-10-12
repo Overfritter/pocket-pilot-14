@@ -3,6 +3,7 @@ import { Home, Wallet, TrendingUp, Receipt, Settings, Wrench, LogOut } from "luc
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 
 const navigation = [
@@ -22,6 +23,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!loading && !user) {
       navigate('/auth');
+    } else if (!loading && user) {
+      // Check if onboarding is completed
+      const checkOnboarding = async () => {
+        const { data } = await supabase
+          .from('profiles')
+          .select('onboarding_completed')
+          .eq('user_id', user.id)
+          .single();
+        
+        if (data && !data.onboarding_completed && window.location.pathname !== '/onboarding') {
+          navigate('/onboarding');
+        }
+      };
+      checkOnboarding();
     }
   }, [user, loading, navigate]);
 
