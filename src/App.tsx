@@ -10,6 +10,7 @@ import CashFlow from "./pages/CashFlow";
 import Transactions from "./pages/Transactions";
 import Rules from "./pages/Rules";
 import Settings from "./pages/Settings";
+import Investments from "./pages/Investments";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
@@ -33,6 +34,7 @@ const App = () => (
                 <Route path="/cash-flow" element={<CashFlow />} />
                 <Route path="/transactions" element={<Transactions />} />
                 <Route path="/rules" element={<Rules />} />
+                <Route path="/investments" element={<Investments />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
