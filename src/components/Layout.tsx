@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: Home },
+  { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Buckets", href: "/buckets", icon: Wallet },
   { name: "Cash Flow", href: "/cash-flow", icon: TrendingUp },
   { name: "Transactions", href: "/transactions", icon: Receipt },
@@ -35,6 +35,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         
         if (data && !data.onboarding_completed && window.location.pathname !== '/onboarding') {
           navigate('/onboarding');
+        } else if (data && data.onboarding_completed && window.location.pathname === '/') {
+          // If user is logged in and on landing page, redirect to dashboard
+          navigate('/dashboard');
         }
       };
       checkOnboarding();

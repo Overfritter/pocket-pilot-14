@@ -13,6 +13,7 @@ import Settings from "./pages/Settings";
 import Investments from "./pages/Investments";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
+import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,12 +25,13 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="*" element={
             <Layout>
               <Routes>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/buckets" element={<Buckets />} />
                 <Route path="/cash-flow" element={<CashFlow />} />
                 <Route path="/transactions" element={<Transactions />} />
