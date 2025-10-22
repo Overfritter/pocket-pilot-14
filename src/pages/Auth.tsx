@@ -33,7 +33,7 @@ export default function Auth() {
     // Check if user is already logged in
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate('/');
+        navigate('/dashboard');
       }
     });
   }, [navigate]);
@@ -74,7 +74,7 @@ export default function Auth() {
           title: "Welcome back!",
           description: "You've successfully logged in.",
         });
-        navigate('/');
+        navigate('/dashboard');
       } else {
         const redirectUrl = `${window.location.origin}/onboarding`;
         
