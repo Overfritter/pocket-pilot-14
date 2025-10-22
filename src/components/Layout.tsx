@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -91,6 +92,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
+            <ThemeToggle />
             <Button
               variant="ghost"
               size="sm"

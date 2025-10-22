@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { TrendingUp, Brain, Target, Shield, Zap, PiggyBank, BarChart3, Users } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -44,15 +45,21 @@ const Landing = () => {
       {/* Announcement Banner */}
       <div className="w-full bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border-b border-primary/10">
         <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-center gap-2 text-sm">
-            <Zap className="w-4 h-4 text-primary" />
-            <span className="font-medium text-foreground">Limited Time: Get 3 months premium free when you sign up today</span>
-            <button 
-              onClick={() => navigate("/auth")}
-              className="ml-2 text-primary hover:text-primary/80 transition-colors underline underline-offset-2"
-            >
-              Claim Offer
-            </button>
+          <div className="flex items-center justify-between">
+            <div className="flex-1" />
+            <div className="flex items-center justify-center gap-2 text-sm">
+              <Zap className="w-4 h-4 text-primary" />
+              <span className="font-medium text-foreground">Limited Time: Get 3 months premium free when you sign up today</span>
+              <button 
+                onClick={() => navigate("/auth")}
+                className="ml-2 text-primary hover:text-primary/80 transition-colors underline underline-offset-2"
+              >
+                Claim Offer
+              </button>
+            </div>
+            <div className="flex-1 flex justify-end">
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </div>
