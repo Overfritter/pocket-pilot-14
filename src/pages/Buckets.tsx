@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Target } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { BucketDialog } from "@/components/BucketDialog";
+import { BucketDetailsDialog } from "@/components/BucketDetailsDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -42,6 +43,8 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function Buckets() {
   const [buckets, setBuckets] = useState<Bucket[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedBucket, setSelectedBucket] = useState<Bucket | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const fetchBuckets = async () => {
     try {
@@ -117,6 +120,10 @@ export default function Buckets() {
             <Card
               key={bucket.id}
               className="group relative overflow-hidden p-6 bg-gradient-card shadow-md hover:shadow-glow transition-all cursor-pointer"
+              onClick={() => {
+                setSelectedBucket(bucket);
+                setDetailsOpen(true);
+              }}
             >
               {/* Progress Ring Background */}
               <div className="absolute -right-8 -top-8 h-32 w-32 opacity-10">
@@ -203,6 +210,14 @@ export default function Buckets() {
         })}
         </div>
       )}
+
+      <BucketDetailsDialog
+        bucket={selectedBucket}
+        allBuckets={buckets}
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+        onSuccess={fetchBuckets}
+      />
     </div>
   );
 }
