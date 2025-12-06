@@ -14,7 +14,144 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      buckets: {
+        Row: {
+          category: string
+          created_at: string
+          current_amount: number | null
+          id: string
+          name: string
+          target_amount: number | null
+          time_limit: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          current_amount?: number | null
+          id?: string
+          name: string
+          target_amount?: number | null
+          time_limit?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          current_amount?: number | null
+          id?: string
+          name?: string
+          target_amount?: number | null
+          time_limit?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          age: number | null
+          created_at: string
+          current_situation: string | null
+          email: string | null
+          finance_personality: string | null
+          finance_tracking_frequency: string | null
+          financial_focus: string | null
+          financial_goal: string | null
+          first_name: string | null
+          future_goal: string | null
+          id: string
+          investment_frequency: string | null
+          last_name: string | null
+          onboarding_completed: boolean | null
+          payment_behavior: string | null
+          phone: string | null
+          risk_tolerance: string | null
+          top_priority: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string
+          current_situation?: string | null
+          email?: string | null
+          finance_personality?: string | null
+          finance_tracking_frequency?: string | null
+          financial_focus?: string | null
+          financial_goal?: string | null
+          first_name?: string | null
+          future_goal?: string | null
+          id?: string
+          investment_frequency?: string | null
+          last_name?: string | null
+          onboarding_completed?: boolean | null
+          payment_behavior?: string | null
+          phone?: string | null
+          risk_tolerance?: string | null
+          top_priority?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age?: number | null
+          created_at?: string
+          current_situation?: string | null
+          email?: string | null
+          finance_personality?: string | null
+          finance_tracking_frequency?: string | null
+          financial_focus?: string | null
+          financial_goal?: string | null
+          first_name?: string | null
+          future_goal?: string | null
+          id?: string
+          investment_frequency?: string | null
+          last_name?: string | null
+          onboarding_completed?: boolean | null
+          payment_behavior?: string | null
+          phone?: string | null
+          risk_tolerance?: string | null
+          top_priority?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rules: {
+        Row: {
+          action: string
+          created_at: string
+          enabled: boolean
+          id: string
+          name: string
+          trigger: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          name: string
+          trigger: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          name?: string
+          trigger?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
