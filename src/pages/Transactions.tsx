@@ -16,6 +16,7 @@ export default function Transactions() {
     { id: 6, date: '2025-09-23', description: 'Whole Foods', amount: -87.50, category: 'Food & Drink' },
     { id: 7, date: '2025-09-22', description: 'Gas Station', amount: -45.00, category: 'Transportation' },
     { id: 8, date: '2025-09-21', description: 'Target', amount: -32.15, category: 'Shopping' },
+    { id: 9, date: '2025-09-01', description: 'Monthly Rent', amount: -1200, category: 'Rent/Mortgage' },
   ];
 
   const categories = Array.from(new Set(transactions.map(t => t.category)));
