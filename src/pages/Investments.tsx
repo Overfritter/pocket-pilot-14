@@ -42,7 +42,7 @@ const Investments = () => {
                 </div>
               )}
             </div>
-            <CardTitle className="text-2xl">AI-Powered Portfolio</CardTitle>
+            <CardTitle className="text-2xl">Automated Portfolio</CardTitle>
             <CardDescription>Let our models do the work</CardDescription>
           </CardHeader>
           <CardContent>
