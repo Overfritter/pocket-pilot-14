@@ -22,6 +22,7 @@ interface SuggestedRule {
   action: string;
   icon: React.ReactNode;
   reason: string;
+  recommended?: boolean;
 }
 
 interface Profile {
@@ -107,10 +108,22 @@ export default function Rules() {
         action: "Round up to nearest dollar and save the difference",
         icon: <Sparkles className="h-5 w-5 text-amber-500" />,
         reason: "Popular rule for easy savings",
+        recommended: false,
       });
     }
 
-    return suggestions.slice(0, 3); // Max 3 suggestions
+    // Always add the recommended allocation rule at the beginning
+    suggestions.unshift({
+      id: "suggested-smart-allocation",
+      name: "Smart Money Allocation",
+      trigger: "When income is received",
+      action: "Automatically allocate funds across buckets based on your goals and financial situation",
+      icon: <TrendingUp className="h-5 w-5 text-emerald-500" />,
+      reason: "Personalized allocation strategy",
+      recommended: true,
+    });
+
+    return suggestions.slice(0, 4); // Max 4 suggestions
   };
 
   const fetchData = async () => {
@@ -231,23 +244,35 @@ export default function Rules() {
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-amber-500" />
             <h2 className="text-lg font-semibold">Suggested for You</h2>
-            <Badge variant="secondary" className="text-xs">AI-Powered</Badge>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {suggestedRules.map((suggested) => (
               <Card
                 key={suggested.id}
-                className="p-4 bg-gradient-to-br from-primary/5 via-background to-amber-500/5 border-dashed border-primary/30 hover:border-primary/50 hover:shadow-md transition-all cursor-pointer group"
+                className={`p-4 border-dashed hover:shadow-md transition-all cursor-pointer group ${
+                  suggested.recommended 
+                    ? "bg-gradient-to-br from-emerald-500/10 via-background to-primary/5 border-emerald-500/50 hover:border-emerald-500/70 ring-1 ring-emerald-500/20" 
+                    : "bg-gradient-to-br from-primary/5 via-background to-amber-500/5 border-primary/30 hover:border-primary/50"
+                }`}
                 onClick={() => handleAddSuggestedRule(suggested)}
               >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+                    <div className={`flex h-9 w-9 items-center justify-center rounded-full ${
+                      suggested.recommended ? "bg-emerald-500/20" : "bg-primary/10"
+                    }`}>
                       {suggested.icon}
                     </div>
-                    <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 border-amber-500/30">
-                      Click to Add
-                    </Badge>
+                    <div className="flex gap-1.5">
+                      {suggested.recommended && (
+                        <Badge className="text-xs bg-emerald-500 hover:bg-emerald-600 text-white">
+                          Recommended
+                        </Badge>
+                      )}
+                      <Badge variant="outline" className="text-xs bg-amber-500/10 text-amber-600 border-amber-500/30">
+                        Click to Add
+                      </Badge>
+                    </div>
                   </div>
                   <div>
                     <h3 className="font-semibold group-hover:text-primary transition-colors">
