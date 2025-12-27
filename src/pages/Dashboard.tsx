@@ -1,14 +1,26 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, AlertCircle, TrendingUp, TrendingDown, Receipt, ArrowDownToLine, ArrowRightLeft, Building2 } from "lucide-react";
+import { Plus, AlertCircle, TrendingUp, TrendingDown, Receipt, ArrowDownToLine, ArrowRightLeft, Building2, X, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type TimePeriod = '1day' | '7days' | '30days' | '1year';
 
 export default function Dashboard() {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>('30days');
+  const [showWelcomePopup, setShowWelcomePopup] = useState(false);
+
+  useEffect(() => {
+    // Show popup when component mounts
+    setShowWelcomePopup(true);
+  }, []);
 
   // Mock data
   const totalBalance = 12450.75; // Balance on platform
@@ -55,6 +67,45 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Welcome Popup */}
+      <Dialog open={showWelcomePopup} onOpenChange={setShowWelcomePopup}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <Sparkles className="h-5 w-5 text-primary" />
+              Your Money Has Been Allocated
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-3">
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                <div className="h-2 w-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <p className="text-sm">Your rent and monthly expenses have already been set aside: <span className="font-semibold">€1,350</span></p>
+              </div>
+              
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                <div className="h-2 w-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <p className="text-sm"><span className="font-semibold">€100</span> to your emergency fund</p>
+              </div>
+              
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                <div className="h-2 w-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <p className="text-sm"><span className="font-semibold">€143.17</span> for your trip to Tokyo; just one more month and you'll have reached your goal!</p>
+              </div>
+              
+              <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                <div className="h-2 w-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <p className="text-sm"><span className="font-semibold">€50</span> extra put into your gift bucket; the Christmas season is coming.</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={() => setShowWelcomePopup(false)}>
+              Got it
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       {/* Hero Section */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div className="space-y-2">
