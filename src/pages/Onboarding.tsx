@@ -44,11 +44,15 @@ const options = {
       { label: 'Rarely or never', value: 'rarely' },
     ],
     question4: [
+      { label: 'Yes', value: 'yes' },
+      { label: 'No', value: 'no' },
+    ],
+    question5: [
       { label: 'Less than a year', value: 'less_than_year' },
       { label: '1-3 years', value: '1_3_years' },
       { label: 'More than 3 years', value: 'more_than_3_years' },
     ],
-    question5: [
+    question6: [
       { label: 'Very stable', value: 'very_stable' },
       { label: 'Stable', value: 'stable' },
       { label: 'Varies', value: 'varies' },
@@ -93,6 +97,7 @@ export default function Onboarding() {
     payment_behavior: '',
     risk_tolerance: '',
     finance_tracking_frequency: '',
+    has_income: '',
     income_duration: '',
     income_stability: '',
     current_situation: '',
@@ -115,7 +120,8 @@ export default function Onboarding() {
       case 1:
         return answers.financial_goal && answers.future_goal;
       case 2:
-        return answers.payment_behavior && answers.risk_tolerance && answers.finance_tracking_frequency && answers.income_duration && answers.income_stability;
+        const incomeQuestionsComplete = answers.has_income === 'no' || (answers.has_income === 'yes' && answers.income_duration && answers.income_stability);
+        return answers.payment_behavior && answers.risk_tolerance && answers.finance_tracking_frequency && answers.has_income && incomeQuestionsComplete;
       case 3:
         return answers.current_situation && answers.top_priority && answers.investment_frequency;
       case 4:
@@ -284,32 +290,50 @@ export default function Onboarding() {
             </div>
 
             <div className="pt-6 space-y-4">
-              <h3 className="text-xl font-bold">How long have you been receiving income?</h3>
+              <h3 className="text-xl font-bold">Do you currently receive income?</h3>
               <div className="space-y-3">
                 {options.step2.question4.map((option) => (
                   <OptionButton
                     key={option.value}
                     option={option}
-                    field="income_duration"
-                    selected={answers.income_duration === option.value}
+                    field="has_income"
+                    selected={answers.has_income === option.value}
                   />
                 ))}
               </div>
             </div>
 
-            <div className="pt-6 space-y-4">
-              <h3 className="text-xl font-bold">How stable is your income?</h3>
-              <div className="space-y-3">
-                {options.step2.question5.map((option) => (
-                  <OptionButton
-                    key={option.value}
-                    option={option}
-                    field="income_stability"
-                    selected={answers.income_stability === option.value}
-                  />
-                ))}
-              </div>
-            </div>
+            {answers.has_income === 'yes' && (
+              <>
+                <div className="pt-6 space-y-4 animate-in fade-in duration-300">
+                  <h3 className="text-xl font-bold">How long have you been receiving income?</h3>
+                  <div className="space-y-3">
+                    {options.step2.question5.map((option) => (
+                      <OptionButton
+                        key={option.value}
+                        option={option}
+                        field="income_duration"
+                        selected={answers.income_duration === option.value}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 space-y-4 animate-in fade-in duration-300">
+                  <h3 className="text-xl font-bold">How stable is your income?</h3>
+                  <div className="space-y-3">
+                    {options.step2.question6.map((option) => (
+                      <OptionButton
+                        key={option.value}
+                        option={option}
+                        field="income_stability"
+                        selected={answers.income_stability === option.value}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 
