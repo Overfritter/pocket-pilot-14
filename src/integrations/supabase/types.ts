@@ -153,6 +153,8 @@ export type Database = {
           first_name: string | null
           future_goal: string | null
           id: string
+          income_duration: string | null
+          income_stability: string | null
           investment_frequency: string | null
           last_name: string | null
           onboarding_completed: boolean | null
@@ -175,6 +177,8 @@ export type Database = {
           first_name?: string | null
           future_goal?: string | null
           id?: string
+          income_duration?: string | null
+          income_stability?: string | null
           investment_frequency?: string | null
           last_name?: string | null
           onboarding_completed?: boolean | null
@@ -197,6 +201,8 @@ export type Database = {
           first_name?: string | null
           future_goal?: string | null
           id?: string
+          income_duration?: string | null
+          income_stability?: string | null
           investment_frequency?: string | null
           last_name?: string | null
           onboarding_completed?: boolean | null
