@@ -152,6 +152,7 @@ export type Database = {
           financial_goal: string | null
           first_name: string | null
           future_goal: string | null
+          has_income: string | null
           id: string
           income_duration: string | null
           income_stability: string | null
@@ -176,6 +177,7 @@ export type Database = {
           financial_goal?: string | null
           first_name?: string | null
           future_goal?: string | null
+          has_income?: string | null
           id?: string
           income_duration?: string | null
           income_stability?: string | null
@@ -200,6 +202,7 @@ export type Database = {
           financial_goal?: string | null
           first_name?: string | null
           future_goal?: string | null
+          has_income?: string | null
           id?: string
           income_duration?: string | null
           income_stability?: string | null
